@@ -3,7 +3,7 @@ import {
   Paper,
   List,
   ListItem,
-  ListItemText
+  ListItemText, Typography
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ImdbContext} from "../../contexts/ImdbContext";
@@ -32,6 +32,9 @@ const PastSearches: FunctionComponent<PastSearchesProps> = () => {
 
   return (
     <Paper className={classes.paper}>
+      <Typography variant="subtitle1">
+        Past searches
+      </Typography>
       <List>
         {!pastSearches?.length ?
           '' :
