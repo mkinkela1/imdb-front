@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import ImdbContextProvider from "./contexts/ImdbContext";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ImdbContextProvider>
     <App />
-  </React.StrictMode>,
+  </ImdbContextProvider>,
   document.getElementById('root')
 );
 
