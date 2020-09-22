@@ -26,9 +26,16 @@ const useStyles = makeStyles((theme) => ({
 
 const PastSearches: FunctionComponent<PastSearchesProps> = () => {
 
-  const { pastSearches } = useContext(ImdbContext);
+  const { pastSearches, getMovie } = useContext(ImdbContext);
 
   const classes = useStyles();
+
+  const handleClick = (title: string | undefined) => {
+    if (getMovie && title)
+      getMovie(title);
+
+    return;
+  }
 
   return (
     <Paper className={classes.paper}>
@@ -40,7 +47,15 @@ const PastSearches: FunctionComponent<PastSearchesProps> = () => {
           '' :
           pastSearches.map(({Title, DateRequested}, idx: number) => (
             <ListItem key={idx} className={classes.listItem}>
-              <ListItemText primary={Title} secondary={DateRequested?.toDateString()} />
+              <ListItemText
+                primary={
+                  <div
+                    style={{cursor: 'pointer', fontWeight: 'bold'}}
+                    onClick={(e) => handleClick(Title)}>{Title}
+                  </div>
+                }
+                secondary={DateRequested?.toDateString()}
+              />
             </ListItem>
           ))
         }
