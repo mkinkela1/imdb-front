@@ -17,7 +17,7 @@ const ImdbResult: FunctionComponent<ImdbResultProps> = () => {
   const classes = useStyles();
 
   return (
-    <Paper className={classes.paper}>SearchBar</Paper>
+    <Paper className={classes.paper}>ImdbResult</Paper>
   );
 }
 

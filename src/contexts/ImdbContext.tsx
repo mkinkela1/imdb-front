@@ -28,8 +28,9 @@ export interface ImdbResponse {
   imdbID?: string,
   Type?: string,
   totalSeasons?: number,
-  Response: boolean,
-  Error?: string
+  Response: string,
+  Error?: string,
+  DateRequested?: Date
 }
 
 interface ImdbContextProviderProps {
@@ -51,11 +52,8 @@ const ImdbContextProvider = (props: ImdbContextProviderProps) => {
 
   useEffect(() => {
 
-    setPastSearches((pastSearches: ImdbResponse[]) => {
-      if(movie !== undefined)
-        return [...pastSearches, movie]
-      return [];
-    })
+    if(movie)
+      setPastSearches((pastSearches: ImdbResponse[]) => [{...movie, DateRequested: new Date()}, ...pastSearches])
 
   }, [movie, setMovie])
 
@@ -63,12 +61,12 @@ const ImdbContextProvider = (props: ImdbContextProviderProps) => {
 
     try {
 
-      const { data } = await fetch( `${config.apiUrl}/?apikey=${config.apiKey}&t=${title}` ).then(r => r.json());
+      const data = await fetch( `${config.apiUrl}/?apikey=${config.apiKey}&t=${title}` ).then(r => r.json());
       setMovie(data);
 
     } catch (error) {
       setMovie({
-        Response: false,
+        Response: "False",
         Error: 'Error getting movie.'
       })
     }
