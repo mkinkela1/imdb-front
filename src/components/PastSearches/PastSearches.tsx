@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {ImdbContext} from "../../contexts/ImdbContext";
+import {type} from "os";
 
 interface PastSearchesProps {}
 
@@ -54,7 +55,7 @@ const PastSearches: FunctionComponent<PastSearchesProps> = () => {
                     onClick={(e) => handleClick(Title)}>{Title}
                   </div>
                 }
-                secondary={DateRequested?.toDateString()}
+                secondary={new Date(DateRequested ? DateRequested : 0).toDateString()}
               />
             </ListItem>
           ))

@@ -30,7 +30,7 @@ export interface ImdbResponse {
   totalSeasons?: number,
   Response: string,
   Error?: string,
-  DateRequested?: Date
+  DateRequested?: number
 }
 
 interface ImdbContextProviderProps {
@@ -48,27 +48,57 @@ const ImdbContextProvider = (props: ImdbContextProviderProps) => {
   const [pastSearches, setPastSearches] = useState<ImdbResponse[]> ([]);
 
   // Get from node api
-  useEffect(() => {}, [])
+  useEffect(() => {
+    fetch(`${config.myBackendApi}/api/movie`).then(r => r.json()).then(r => setPastSearches(r));
+  }, [])
 
   useEffect(() => {
 
-    if(movie)
-      setPastSearches((pastSearches: ImdbResponse[]) => [{...movie, DateRequested: new Date()}, ...pastSearches])
+    if(movie && movie.Title) {
+
+      setPastSearches((pastSearches: ImdbResponse[]) => [{...movie, DateRequested: Date.now()}, ...pastSearches])
+      postMovie(movie.Title);
+    }
 
   }, [movie, setMovie])
 
+  // Get movie from IMDB database
   const getMovie = async (title: string) => {
 
     try {
 
       const data = await fetch( `${config.apiUrl}/?apikey=${config.apiKey}&t=${title}` ).then(r => r.json());
-      setMovie(data);
+      if(data.Response === 'True')
+        setMovie(data);
 
     } catch (error) {
       setMovie({
         Response: "False",
         Error: 'Error getting movie.'
       })
+    }
+  }
+
+  // Create movie in our MongoDB
+  const postMovie = async (title: string) => {
+
+    try {
+
+      const data = {
+        Title: title,
+        DateRequested: Date.now()
+      }
+
+      await fetch(`${config.myBackendApi}/api/movie`, {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      }).then(r => r.json())
+
+    } catch(error) {
+      console.log('Error posting movie');
     }
   }
 
